@@ -1,0 +1,77 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+
+google.charts.load('current', {'packages':['gantt']});
+google.charts.setOnLoadCallback(drawChart);
+
+function daysToMilliseconds(days) {
+return days * 24 * 60 * 60 * 1000;
+}
+
+function drawChart() {
+
+var data = new google.visualization.DataTable();
+data.addColumn('string', 'Task ID');
+data.addColumn('string', 'Task Name');
+data.addColumn('string', 'Resource');
+data.addColumn('date', 'Start Date');
+data.addColumn('date', 'End Date');
+data.addColumn('number', 'Duration');
+data.addColumn('number', 'Percent Complete');
+data.addColumn('string', 'Dependencies');
+
+data.addRows([
+   ['Plan', 'Project Plan', null,
+   new Date(2018, 1, 06), new Date(2018, 1, 16), null,  0,  null],
+   ['Dataset', 'Fix Datasets', 'Research',
+   new Date(2018, 1, 06), new Date(2018, 1, 20), null,  0,  null],
+   ['LitStudy', 'Literature / Background Study', 'report',
+   new Date(2018, 1, 12), new Date(2018, 1, 22), null,  0,  null],
+   ['Imp1', 'Implement Prototype 1', 'Research',
+   new Date(2018, 1, 21), new Date(2018, 2, 7), null,  0,  'Dataset'],
+   ['User feedback 1', 'User Testing 1', 'Feedback',
+   new Date(2018, 2, 7), new Date(2018, 2, 12), null,  0,  'Imp1'],
+   ['Imp2', 'Implement Prototype 2', 'Research',
+   new Date(2018, 2, 13), new Date(2018, 2, 27), null,  0,  'User feedback 1'],
+   ['User feedback 2', 'User testing 2', 'Feedback',
+   new Date(2018, 2, 28), new Date(2018, 3, 2), null,  0, 'Imp2'],
+   ['MetRes1', 'Method / Results Prototype 1', 'report',
+   new Date(2018, 1, 22), new Date(2018, 2, 12), null,  0, null],
+   ['MetRes2', 'Method / Results Prototype 2', 'report',
+   new Date(2018, 2, 13), new Date(2018, 3, 1), null,  0, null],
+   ['DisConc', 'Discussion and Conclusion', 'report',
+   new Date(2018, 3, 2), new Date(2018, 3, 15), null,  0, 'User feedback 2'],
+   ['Review','Critical Review', 'Crit',
+   new Date(2018, 4, 14), new Date(2018, 4, 22), null,  0, null],
+   ['Draft','Draft', 'report',
+   new Date(2018, 3, 17), new Date(2018, 3, 23), null,  0, null],
+   ['Draft','Final Draft for Peer Review', 'report',
+   new Date(2018, 3, 23), new Date(2018, 4, 14), null,  0, null]
+
+]);
+
+var options = {
+          height: 800,
+          gantt: {
+            criticalPathEnabled: false, // Critical path arrows will be the same as other arrows.
+            arrow: {
+              angle: 100,
+              width: 5,
+              color: 'green',
+              radius: 0
+            }
+          }
+        };
+
+var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+chart.draw(data, options);
+}
+</script>
+</head>
+<body>
+  <div id="chart_div"></div>
+</body>
+</html>
