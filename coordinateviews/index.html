@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>D3 Brush and Linking tutorial</title>
+	<title>Trajectory visualisation</title>
 
 	<!-- Bootstrap cdn -->
 	<!-- Latest compiled and minified CSS -->
@@ -20,7 +20,7 @@
 </head>
 <body>
 <div class="container-fluid">
-	<h1>UCY Trajectories</h1>
+	<!-- <h1>UCY Trajectories</h1> -->
   <div class="row">
 		<div class="col-xs-12" id = "frames">
 			<h2>Frames</h2>
@@ -29,15 +29,15 @@
 
 
 		<!-- On small screens fills the full grid, on medium+ ones only half -->
-		<div class="col-xs-12 col-md-6" id = "traj"> <!--Changed from 4 and 8 to 6 and 6, as they, contrary to the example, should be of same size? -->
-			<h2>Trajectories</h2>
-			<div class="barChart" id="trajectories"></div>
+		<div class="col-xs-12 col-md-6" id = "rtraj"> <!--Changed from 4 and 8 to 6 and 6, as they, contrary to the example, should be of same size? -->
+			<h2>Real trajectories</h2>
+			<div class="barChart" id="realtraj"></div>
 		</div>
 
 		<!-- On small screens fills the full grid, on medium+ ones only half -->
-		<div class="col-xs-12 col-md-6" id = "over">
-			<h2>Overview</h2>
-			<div class="barChart" id="overview"></div>
+		<div class="col-xs-12 col-md-6" id = "straj">
+			<h2>Simulated trajectories</h2>
+			<div class="barChart" id="simtraj"></div>
 		</div>
 
   </div>

@@ -1,100 +1,86 @@
-var staticOverview = overviewChart();
-var myslider = frameSeriesChart();
-var trajectories = overviewChart();
+var realdata;
 
+d3.json("data/data.json", function(d){
+  doSomething(d);
+});
 
-d3.json("data/data.json", function(data){
-  var data1 = data;
+function doSomething(jsondata){
+  realdata = jsondata;
+  //nested function, reading both data, since the rest of the script is run otherwise.
+  var simdata;
+  var realtrajectories = overviewChart();
+  var myslider = frameSeriesChart();
+  var simtrajectories = overviewChart();
 
-//not sure if this is needed, maybe useful later
-//--------------------------
-  var csData = crossfilter(data);
-  csData.frame = csData.dimension(function(d){
-    return d.frame;
-  });
-  csData.person = csData.dimension(function(d){
-    return d.person;
-  })
+  d3.json("data/datasim.json", function(datasim){
+  simdata = datasim;
 
-  csData.frames = csData.frame.group();
-  csData.people = csData.person.group();
+  //create slider
+    d3.select("#frameline")
+      .datum(realdata)
+      .call(myslider);
 
-  myslider.onbrushed(function(selected){
+  // //create simulated trajectories
+  //   d3.select("#simtraj")
+  //     .datum(simdata)
+  //     .call(simtrajectories);
+
+  //create real trajectories
+    d3.select("#realtraj")
+      .datum(realdata)
+      .call(realtrajectories);
+
+  myslider.onbrushed(function(selected){  //I think this is called everytime a brush-event occurs?
        var mini = selected[0];
        var maxi = selected[1];
 
-       var nydata = [];
+       var newrealdata = [];
+       var newsimdata = [];
 
-       for(i = 0; i < data.length; i++){
-         if(data[i].frame >= mini && data[i].frame <= maxi ){
-           nydata.push(data[i]);
+       //only select trajectories within the brushed selection:
+
+       //for real data
+       for(i = 0; i < realdata.length; i++){
+         if(realdata[i].frame >= mini && realdata[i].frame <= maxi ){
+           newrealdata.push(realdata[i]);
+         }
+       }
+       //for simulated data
+       for(i = 0; i < simdata.length; i++){
+         if(simdata[i].frame >= mini && simdata[i].frame <= maxi ){
+           newsimdata.push(simdata[i]);
          }
        }
 
-
-      // //TODO this is where we will select which trajectories to show
-      // var person1 = [];
-      // var numberOfPeople = 2;
-      // // var numberOfPeople = Math.floor((Math.random() * 100) + 1);
-      // for(i = 0; i < data.length; i++){
-      //   if(data[i].person <= numberOfPeople-1 ){
-      //     person1.push(data[i]);
-      //   }
-      // }
-      // data1 = person1;
-      // console.log(person1.frames);
-      data1 = nydata;
-      update();
-  });
+      update(newrealdata,newsimdata);
+  });//selected onbrushed
 
   // console.log(csData.frames.all())
 //---------------------
 
-  function update(){
-    console.log("update");
-// -------Without these, it just adds new elements BUG, not anymore I think, could be cleaned up
-    // d3.select("#frameline").remove();
-    // d3.select("#frames").append("div").attr("id", "frameline");
+  function update(newrealdata,newsimdata){
+    // console.log("update");
 
-    d3.select("#trajectories").remove();
-    d3.select("#traj").append("div").attr("id", "trajectories");
 
-    // d3.select("#overview").remove();
-    // d3.select("#over").append("div").attr("id", "overview");
-    // myslider = frameSeriesChart();
-    // ----------------
-    // var svg = myslider.svg();
-    // console.log(svg);
-    // svg.selectAll("*").remove();
-    // d3.select(myslider.svg()).remove();
-    // console.log(data);
+    //In search for a better way (crossfilter?) I remove the entire div and then just remake it
+    d3.select("#realtraj").remove();
+    d3.select("#rtraj").append("div").attr("id", "realtraj");
 
-    // d3.select("#frameline")
-    //   .datum(data)
-    //   .call(myslider);
+    // d3.select("#simtraj").remove();
+    // d3.select("#straj").append("div").attr("id", "simtraj");
 
-  //.datum(csData.people.all()) not sure why this would be better
-  	// d3.select("#overview")
-  	// 	.datum(data)
-  	// 	.call(staticOverview);
+    // // create simulated trajectories
+    // d3.select("#simtraj")
+    //   .datum(newsimdata)
+    //   .call(simtrajectories);
 
-    d3.select("#trajectories")
-      .datum(data1)
-      .call(trajectories);
+    //create real trajectories
+    d3.select("#realtraj")
+      .datum(newrealdata)
+      .call(realtrajectories);
   }//update
 
-//------------duplication, fix when  update works as intended, then just call update()
-  d3.select("#frameline")
-    .datum(data)
-    .call(myslider);
 
-//.datum(csData.people.all()) not sure why this would be better
-  d3.select("#overview")
-    .datum(data)
-    .call(staticOverview);
-
-  d3.select("#trajectories")
-    .datum(data)
-    .call(trajectories);
-
-});//d3.json
+});
+}//doSomething
+// });//d3.json
